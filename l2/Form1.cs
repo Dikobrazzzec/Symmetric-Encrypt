@@ -22,9 +22,6 @@ namespace l2
         private void button1_Click(object sender, EventArgs e)
         {
             symmetricCrypt starter = new symmetricCrypt();
-            //label1.Text = starter.output(starter.algElect(comboBox1.SelectedIndex, comboBox2.SelectedIndex, textBox1.Text, textBox2.Text));
-            //label1.Text = BitConverter.ToString(starter.algElect(comboBox1.SelectedIndex, comboBox2.SelectedIndex, textBox1.Text, textBox2.Text));
-            //label1.Text =Convert.ToString( starter.algElect(comboBox1.SelectedIndex, comboBox2.SelectedIndex, textBox1.Text, textBox2.Text));
             label1.Text = starter.output(starter.algElect(comboBox1.SelectedIndex, comboBox2.SelectedIndex, Encoding.UTF8.GetBytes(textBox1.Text), Encoding.UTF8.GetBytes(textBox2.Text)));
         }
 
@@ -101,23 +98,20 @@ class symmetricCrypt
         byte[] encryptData = Array.Empty<byte>();
         using (Aes myAes = Aes.Create())
         {
-            if (key.Length != 16 & key.Length != 0)
-                MessageBox.Show("Invalid length of key. The standart key will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else
+            if (key.Length == 16)
             {
                 myAes.Key = key;
-                MessageBox.Show("The custom key will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The custom key will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);                       //5bytgadfgasdfge1
             }
-            //if (IV.Length > 0)   //chek it      5bytgadfgasdfge1
-            //   myAes.IV = IV;
-            if ( IV.Length != 16 & IV.Length != 0)
-                MessageBox.Show("invalid length of IV. The standart IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-             else
+            if (key.Length != 16 & key.Length != 0)
+                MessageBox.Show("Invalid length of key. The standart key will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (IV.Length == 16)
             {
                 myAes.IV = IV;
                 MessageBox.Show("The custome IV will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
+            if ( IV.Length != 16 & IV.Length != 0)
+                MessageBox.Show("invalid length of IV. The standart IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             ICryptoTransform encryptor = myAes.CreateEncryptor(myAes.Key, myAes.IV);
             using (MemoryStream msEncrypt = new MemoryStream())
             {
