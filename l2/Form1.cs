@@ -102,17 +102,22 @@ class symmetricCrypt
         using (Aes myAes = Aes.Create())
         {
             if (key.Length != 16 & key.Length != 0)
-            {
                 MessageBox.Show("Invalid length of key. The standart key will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            }
             else
             {
                 myAes.Key = key;
-                MessageBox.Show("The custom key will be used", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The custom key will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            if (IV.Length > 0)   //chek it
+            //if (IV.Length > 0)   //chek it      5bytgadfgasdfge1
+            //   myAes.IV = IV;
+            if ( IV.Length != 16 & IV.Length != 0)
+                MessageBox.Show("invalid length of IV. The standart IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+             else
+            {
                 myAes.IV = IV;
+                MessageBox.Show("The custome IV will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
             ICryptoTransform encryptor = myAes.CreateEncryptor(myAes.Key, myAes.IV);
             using (MemoryStream msEncrypt = new MemoryStream())
             {
