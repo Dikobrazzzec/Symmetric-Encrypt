@@ -1,0 +1,10 @@
+E:\Учеба\Проги\l2\l2\bin\Debug\l2.exe.config
+E:\Учеба\Проги\l2\l2\bin\Debug\l2.exe
+E:\Учеба\Проги\l2\l2\bin\Debug\l2.pdb
+E:\Учеба\Проги\l2\l2\obj\Debug\l2.csprojAssemblyReference.cache
+E:\Учеба\Проги\l2\l2\obj\Debug\l2.Form1.resources
+E:\Учеба\Проги\l2\l2\obj\Debug\l2.Properties.Resources.resources
+E:\Учеба\Проги\l2\l2\obj\Debug\l2.csproj.GenerateResource.cache
+E:\Учеба\Проги\l2\l2\obj\Debug\l2.csproj.CoreCompileInputs.cache
+E:\Учеба\Проги\l2\l2\obj\Debug\l2.exe
+E:\Учеба\Проги\l2\l2\obj\Debug\l2.pdb
