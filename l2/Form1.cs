@@ -23,6 +23,8 @@ namespace l2
         {
             symmetricCrypt starter = new symmetricCrypt();
             label1.Text = starter.output(starter.algElect(comboBox1.SelectedIndex, comboBox2.SelectedIndex, Encoding.UTF8.GetBytes(textBox1.Text), Encoding.UTF8.GetBytes(textBox2.Text)));
+            textBox1.Text = starter.output(starter.keyB);
+            textBox2.Text = starter.output(starter.IVB);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -50,7 +52,10 @@ namespace l2
 
 class symmetricCrypt
 {
-    private string fileElector()                            
+    public byte[] keyB;
+    public byte[] IVB;
+
+    private string fileElector()
     {
         string filePath = string.Empty;
         string fileContent = string.Empty;
@@ -70,7 +75,7 @@ class symmetricCrypt
         return filePath;
     }
 
-    public string output (byte[] byteArr)
+    public string output(byte[] byteArr)                                //сюда надо передовать по отдельности data key IV
     {
         StringBuilder outString = new StringBuilder();
         foreach (var i in byteArr)
@@ -78,7 +83,9 @@ class symmetricCrypt
         return outString.ToString();
     }
 
-    public byte[] algElect(int combBox1Ind, int combBox2Ind, byte[] key, byte[] IV)
+
+
+    public byte [] algElect(int combBox1Ind, int combBox2Ind, byte[] key, byte[] IV)
     { 
         string dataPath = fileElector();
         byte[] encryptData = Array.Empty<byte>();
@@ -109,26 +116,28 @@ class symmetricCrypt
     private byte[] encryptAES(string dataPath, byte[] key, byte[] IV)
     {
         FileStream data = File.OpenRead(dataPath);
-      //  string data = "12312aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3";
-      //  if (data == null || data.Length <= 0)
-      //     throw new ArgumentNullException("data2");
+        //  string data = "12312aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3";
+        //  if (data == null || data.Length <= 0)
+        //     throw new ArgumentNullException("data2");
         byte[] encryptData = Array.Empty<byte>();
         using (Aes myAes = Aes.Create())
         {
             if (key.Length == 16)
             {
                 myAes.Key = key;
-                MessageBox.Show("The custom key will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);                      
+                MessageBox.Show("The custom key will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             if (key.Length != 16 & key.Length != 0)
                 MessageBox.Show("Invalid length of key. The standart key will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            if (IV.Length == 16)                                                                                                                    
+            if (IV.Length == 16)
             {
                 myAes.IV = IV;
                 MessageBox.Show("The custome IV will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            if ( IV.Length != 16 & IV.Length != 0)
+            if (IV.Length != 16 & IV.Length != 0)
                 MessageBox.Show("Invalid length of IV. The standart IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            keyB = myAes.Key;
+            IVB = myAes.IV;
             ICryptoTransform encryptor = myAes.CreateEncryptor(myAes.Key, myAes.IV);
             using (MemoryStream msEncrypt = new MemoryStream())
             {
@@ -165,6 +174,8 @@ class symmetricCrypt
             }
             if (IV.Length != 8 & IV.Length != 0)
                 MessageBox.Show("Invalid length of IV. The standart IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            keyB = myDes.Key;
+            IVB = myDes.IV;
             ICryptoTransform encryptor = myDes.CreateEncryptor(myDes.Key, myDes.IV);
             using (MemoryStream msEncrypt = new MemoryStream())
             {
@@ -202,6 +213,8 @@ class symmetricCrypt
             }
             if (IV.Length != 8 & IV.Length != 0)
                 MessageBox.Show("Invalid length of IV. The standart IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            keyB = myRC2.Key;
+            IVB = myRC2.IV;
             ICryptoTransform encryptor = myRC2.CreateEncryptor(myRC2.Key, myRC2.IV);
             using (MemoryStream msEncrypt = new MemoryStream())
             {
@@ -239,6 +252,8 @@ class symmetricCrypt
             }
             if (IV.Length != 16 & IV.Length != 0)
                 MessageBox.Show("Invalid length of IV. The standart IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            keyB = myRij.Key;
+            IVB = myRij.IV;
             ICryptoTransform encryptor = myRij.CreateEncryptor(myRij.Key, myRij.IV);
             using (MemoryStream msEncrypt = new MemoryStream())
             {
@@ -276,6 +291,8 @@ class symmetricCrypt
             }
             if (IV.Length != 8 & IV.Length != 0)
                 MessageBox.Show("Invalid length of IV. The standart IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            keyB = myTripD.Key;
+            IVB = myTripD.IV;
             ICryptoTransform encryptor = myTripD.CreateEncryptor(myTripD.Key, myTripD.IV);
             using (MemoryStream msEncrypt = new MemoryStream())
             {
