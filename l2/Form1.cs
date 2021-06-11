@@ -22,7 +22,7 @@ namespace l2
         private void button1_Click(object sender, EventArgs e)
         {
             symmetricCrypt starter = new symmetricCrypt();
-            label1.Text = starter.output(starter.algElect(comboBox1.SelectedIndex, comboBox2.SelectedIndex, Encoding.UTF8.GetBytes(textBox1.Text), Encoding.UTF8.GetBytes(textBox2.Text)));
+              label1.Text = starter.output(starter.algElect(comboBox1.SelectedIndex, comboBox2.SelectedIndex, Encoding.UTF8.GetBytes(textBox1.Text), Encoding.UTF8.GetBytes(textBox2.Text)));
             textBox1.Text = starter.output(starter.keyB);
             textBox2.Text = starter.output(starter.IVB);
         }
@@ -75,12 +75,14 @@ class symmetricCrypt
         return filePath;
     }
 
-    public string output(byte[] byteArr)                                //сюда надо передовать по отдельности data key IV
+    public string output(byte[] byteArr)                                
     {
         StringBuilder outString = new StringBuilder();
         foreach (var i in byteArr)
-            outString.Append(i.ToString("X2"));
+            outString.Append(i.ToString("x2"));
         return outString.ToString();
+     //   return BitConverter.ToString(byteArr);
+        // return Encoding.UTF8.GetString(byteArr);
     }
 
 
