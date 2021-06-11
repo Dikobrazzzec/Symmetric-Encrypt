@@ -31,6 +31,18 @@ namespace l2
         {
 
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            label5.Text = Convert.ToString((textBox1.Text.Length ));
+            label8.Text = Convert.ToString((textBox1.Text.Length*8/2));
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            label6.Text = Convert.ToString((textBox2.Text.Length));
+            label7.Text = Convert.ToString((textBox2.Text.Length * 8 / 2));
+        }
     }
 }
 
