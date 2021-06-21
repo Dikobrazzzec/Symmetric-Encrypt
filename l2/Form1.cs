@@ -22,7 +22,9 @@ namespace l2
         private void button1_Click(object sender, EventArgs e)
         {
             symmetricCrypt starter = new symmetricCrypt();
-            textBox3.Text = starter.
+            textBox3.Text = starter.algElect(comboBox1.SelectedIndex, comboBox2.SelectedIndex, Encoding.Unicode.GetBytes(textBox1.Text), Encoding.Unicode.GetBytes(textBox2.Text));
+            textBox1.Text = Encoding.Unicode.GetString(starter.keyB);
+            textBox2.Text = Encoding.Unicode.GetString(starter.IVB);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -33,45 +35,39 @@ namespace l2
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             label5.Text = Convert.ToString(Encoding.Unicode.GetBytes(textBox1.Text).Length);
-            label8.Text = Convert.ToString(Convert.ToInt32(label5.Text) * 8);
+            label8.Text = Convert.ToString(Convert.ToInt16(label5.Text) * 8);
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             label6.Text = Convert.ToString(Encoding.Unicode.GetBytes(textBox2.Text).Length);
-            label7.Text = Convert.ToString(Convert.ToInt32(label6.Text) * 8);
+            label7.Text = Convert.ToString(Convert.ToInt16(label6.Text) * 8);
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             label11.Text = Convert.ToString(Encoding.Unicode.GetBytes(textBox3.Text).Length);
-            label1.Text = Convert.ToString(Convert.ToInt32(label11.Text) * 8);
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //TEST
-            //symmetricCrypt starter = new symmetricCrypt();
-            //textBox3.Text = starter.output(starter.testEncr(textBox3.Text, Encoding.Unicode.GetBytes(textBox1.Text), Encoding.Unicode.GetBytes(textBox2.Text)));
-            //textBox1.Text = starter.output(starter.keyB);
-            //textBox2.Text = starter.output(starter.IVB);
+            label1.Text = Convert.ToString(Convert.ToInt16(label11.Text) * 8);
         }
     }
 }
 
 /* 
- * 32BYTE:
+ * 64BYTE:
  * a65sd4f6aws4ef32as14d6f85a4s32df
  * a6s5d4f6a5sd1f63a5we4fa3s2df4a65
- * 24BYTE:
+ * 48BYTE:
  * 65asd4fasdf6a5s4dfa6s5d4
  * as32df16awe4f3a2sdfa65sd
- * 16 BYTE:
+ * 32 BYTE:
  * 5bytgadfgasdfge1
  * 5qewradsasdfasdf
- * 8BYTE:
+ * 16BYTE:
  * 5qewrads
  * 9asdfasm
+ * 8BYTE:
+ * q7ds
+ * 4ksm
 */
 
 //     AES        |  KEY 32 BYTE  |  256 BIT
@@ -115,7 +111,7 @@ class symmetricCrypt
         return filePath;
     }
 
-    private int fileSafe(string data)
+    private void fileSafe(string data)
     {
         SaveFileDialog saveFileDialog = new SaveFileDialog();
         saveFileDialog.Filter = "txt files (*.txt)| *.txt|All files (*.*)|*.*";
@@ -124,63 +120,65 @@ class symmetricCrypt
 
         if (saveFileDialog.ShowDialog() == DialogResult.OK)
             File.WriteAllText(saveFileDialog.FileName, data);
-        return 0;
     }
 
     public string algElect(int combBox1Ind, int combBox2Ind, byte[] key, byte[] IV)
     { 
         string dataPath = fileElector();
-        string encryptData = String.Empty;
+        string retData = String.Empty;
         if (combBox1Ind == 0)
         {
             switch (combBox2Ind)
             {
                 case 0:
-                    encryptData = encryptAES(dataPath, key, IV);    
+                    retData = encryptAES(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
                 case 1:
-                    encryptData = encryptDES(dataPath, key, IV);
+                    retData = encryptDES(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
                 case 2:
-                    encryptData = encryptRC2(dataPath, key, IV);
+                    retData = encryptRC2(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
                 case 3:
-                    encryptData = encryptRijndael(dataPath, key, IV);
+                    retData = encryptRijndael(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
                 case 4:
-                    encryptData = encryptTripleDes(dataPath, key, IV);
+                    retData = encryptTripleDes(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
             }
         }
-        return encryptData;
-    }
-
-    public string decralgElect (int combBox1Ind, int combBox2Ind, byte[] key, byte[] IV)
-    {
-        string dataPath = fileElector();
-        string decryptData = String.Empty;
         if (combBox1Ind == 1)
         {
             switch (combBox2Ind)
             {
                 case 0:
-                    decryptData = decryptAES(dataPath, key, IV);
+                    retData = decryptAES(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
                 case 1:
-                    decryptData = decryptDes(dataPath, key, IV);
+                    retData = decryptDes(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
                 case 2:
-                    decryptData = decryptRC2(dataPath, key, IV);
+                    retData = decryptRC2(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
                 case 3:
-                    decryptData = decryptRijndael(dataPath, key, IV);
+                    retData = decryptRijndael(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
                 case 4:
-                    decryptData = decryptTripleDes(dataPath, key, IV);
+                    retData = decryptTripleDes(dataPath, key, IV);
+                    fileSafe(retData);
                     break;
             }
         }
-        return decryptData;
+        return retData;
     }
 
     ///////////////////////////ENCRYPT///////////////////////////
@@ -207,6 +205,7 @@ class symmetricCrypt
                 MessageBox.Show("Invalid length of IV. The random IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             keyB = myAes.Key;
             IVB = myAes.IV;
+           // myAes.Padding = PaddingMode.PKCS7;
             ICryptoTransform encryptor = myAes.CreateEncryptor(myAes.Key, myAes.IV);
             using (MemoryStream msEncrypt = new MemoryStream())
             {
@@ -216,8 +215,9 @@ class symmetricCrypt
                     {
                         swEncrypt.Write(data);
                     }
-                    encryptData = msEncrypt.ToArray();
+                    
                 }
+                encryptData = msEncrypt.ToArray();
             }
         }
         return Encoding.Unicode.GetString(encryptData);
@@ -403,12 +403,13 @@ class symmetricCrypt
                 MessageBox.Show("Invalid length of IV. Random IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             keyB = myAes.Key;
             IVB = myAes.IV;
+            myAes.Padding = PaddingMode.None;
             ICryptoTransform decryptor = myAes.CreateDecryptor(myAes.Key, myAes.IV);
             using (MemoryStream msDecrypt = new MemoryStream(data))
             {
                 using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                 {
-                    using (StreamReader srDecryptor = new StreamReader(csDecrypt, Encoding.Unicode))
+                    using (StreamReader srDecryptor = new StreamReader(csDecrypt))
                     {
                         decryptdata = srDecryptor.ReadToEnd();
                     }
@@ -565,43 +566,4 @@ class symmetricCrypt
         }
         return decryptdata;
     }
-
-
-    public byte[] testEncr (string data, byte[] key, byte[] IV)
-    {
-        byte [] encryptData ;
-        using (Aes myAes = Aes.Create())
-        {
-            //if (key.Length == 32)
-            //{
-            //    myAes.Key = key;
-            //    MessageBox.Show("The custom key will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //}
-            //if (key.Length != 16 & key.Length != 0)
-            //    MessageBox.Show("Invalid length of key. The standart key will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //if (IV.Length == 16)
-            //{
-            //    myAes.IV = IV;
-            //    MessageBox.Show("The custome IV will be used.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //}
-            //if (IV.Length != 16 & IV.Length != 0)
-            //    MessageBox.Show("Invalid length of IV. The standart IV will be used.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            keyB = myAes.Key;
-            IVB = myAes.IV;
-            ICryptoTransform encryptor = myAes.CreateEncryptor(myAes.Key, myAes.IV);
-            using (MemoryStream msEncrypt = new MemoryStream())
-            {
-                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                {
-                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                    {
-                        swEncrypt.Write(data);
-                    }
-                    encryptData = msEncrypt.ToArray();
-                }
-            }
-        }
-        return encryptData;
-    }
-
 }
